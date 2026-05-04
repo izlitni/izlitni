@@ -5,724 +5,757 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>izlitni — apps</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Fira+Code:wght@300;400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Nunito+Sans:ital,wght@0,200;0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:       #05070b;
-  --surface:  #0b0e15;
-  --card:     #0d1018;
-  --border:   rgba(255,255,255,0.055);
-  --border-h: rgba(255,255,255,0.13);
-  --text:     #dde1ec;
-  --text-dim: #9198b0;
-  --muted:    #454d66;
-  --accent:   #b9ff4b;
-  --a-glow:   rgba(185,255,75,0.14);
-  --a-dim:    rgba(185,255,75,0.06);
 
-  --c-finance:  #3dffc8; --cg-finance:  rgba(61,255,200,0.08);
-  --c-consumer: #ff9f3d; --cg-consumer: rgba(255,159,61,0.08);
-  --c-mystery:  #e03dff; --cg-mystery:  rgba(224,61,255,0.08);
-  --c-food:     #ff5e3d; --cg-food:     rgba(255,94,61,0.08);
-  --c-tool:     #b9ff4b; --cg-tool:     rgba(185,255,75,0.08);
-  --c-health:   #3db0ff; --cg-health:   rgba(61,176,255,0.08);
-  --c-islamic:  #ffcc3d; --cg-islamic:  rgba(255,204,61,0.08);
-  --c-social:   #a03dff; --cg-social:   rgba(160,61,255,0.08);
-  --c-crypto:   #3dffa0; --cg-crypto:   rgba(61,255,160,0.08);
-  --c-exp:      #ff3d8a; --cg-exp:      rgba(255,61,138,0.08);
+/* ────────────────────────────────────────────
+   TOKENS
+──────────────────────────────────────────── */
+:root {
+  --bg:        #060810;
+  --bg-card:   #0a0d16;
+  --bg-hover:  #0d1020;
+  --line:      rgba(255,255,255,0.065);
+  --line-h:    rgba(255,255,255,0.14);
+  --text:      #d8dce8;
+  --text-2:    #7d86a0;
+  --text-3:    #3c4260;
+  --accent:    #9eb3f0;
+  --accent-d:  rgba(158,179,240,0.1);
+  --white:     #eceef5;
 }
 
+/* ────────────────────────────────────────────
+   RESET & BASE
+──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-weight: 300;
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ────────────────────────────────────────────
+   BACKGROUND LAYER
+──────────────────────────────────────────── */
+/* Dot matrix */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Vignette */
 body::after {
   content: '';
   position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.028; pointer-events: none; z-index: 9999;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(60,80,160,0.06) 0%, transparent 70%),
+              radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30,40,100,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.bg-fx { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.glow {
-  position: absolute; border-radius: 50%;
-  filter: blur(120px); opacity: 0.06;
-  animation: drift 20s ease-in-out infinite alternate;
-}
-.glow-1 { width: 700px; height: 700px; background: var(--accent); top: -300px; left: -200px; animation-delay: 0s; }
-.glow-2 { width: 500px; height: 500px; background: #3dffc8; bottom: -200px; right: -100px; animation-delay: -7s; }
-.glow-3 { width: 350px; height: 350px; background: var(--c-mystery); top: 50%; left: 55%; animation-delay: -14s; }
-
-@keyframes drift {
-  from { transform: translate(0,0) scale(1); }
-  to   { transform: translate(30px,40px) scale(1.1); }
+/* Grain */
+.grain {
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  opacity: 0.022;
+  pointer-events: none;
+  z-index: 9999;
 }
 
-.scanline {
-  position: fixed; inset: 0; pointer-events: none; z-index: 9998;
-  background: repeating-linear-gradient(to bottom,
-    transparent 0px, transparent 3px,
-    rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
-}
-
+/* ────────────────────────────────────────────
+   PAGE
+──────────────────────────────────────────── */
 .page {
   position: relative; z-index: 1;
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 36px 100px;
+  padding: 0 40px 120px;
 }
 
-/* ── Header ── */
+/* ────────────────────────────────────────────
+   HEADER
+──────────────────────────────────────────── */
 header {
-  padding: 72px 0 64px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: 32px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 52px;
+  padding: 80px 0 0;
+  margin-bottom: 72px;
 }
 
-.header-tag {
-  font-family: 'Fira Code', monospace;
-  font-size: 11px;
-  color: var(--accent);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-  display: flex; align-items: center; gap: 10px;
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
 }
-.header-tag::before {
+
+.header-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-3);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.header-meta::before {
   content: '';
   display: inline-block;
-  width: 24px; height: 1px;
+  width: 18px; height: 1px;
   background: var(--accent);
+  opacity: 0.6;
 }
 
 h1 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: clamp(68px, 9vw, 130px);
-  line-height: 0.87;
-  letter-spacing: -0.01em;
+  font-size: clamp(64px, 9.5vw, 128px);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--white);
   text-transform: uppercase;
-  color: var(--text);
 }
-h1 em {
-  font-style: normal;
+
+h1 .outline {
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--accent);
+  -webkit-text-stroke: 1px rgba(158,179,240,0.5);
 }
 
-.header-sub {
-  margin-top: 20px;
-  font-family: 'Fira Code', monospace;
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-  display: flex; align-items: center; gap: 16px;
-}
-.header-sub span { color: var(--accent); }
-
-.header-right {
-  display: flex; flex-direction: column;
-  align-items: flex-end; gap: 14px;
-}
-
-.gh-btn {
-  display: inline-flex; align-items: center; gap: 9px;
-  text-decoration: none;
-  font-family: 'Fira Code', monospace;
-  font-size: 11.5px;
-  color: var(--text-dim);
-  border: 1px solid var(--border);
-  padding: 10px 18px;
-  border-radius: 6px;
-  letter-spacing: 0.05em;
-  transition: all 0.2s;
-  background: rgba(255,255,255,0.02);
-}
-.gh-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--a-dim); }
-.gh-btn svg { width: 14px; height: 14px; fill: currentColor; }
-
-.stats {
-  font-family: 'Fira Code', monospace;
+.header-tagline {
+  margin-top: 22px;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: var(--muted);
-  text-align: right;
-  line-height: 1.8;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  line-height: 2;
 }
-.stats strong { color: var(--accent); font-weight: 500; }
+.header-tagline b { color: var(--accent); font-weight: 400; }
 
-/* ── Controls ── */
+/* Right side */
+.header-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  padding-top: 4px;
+  flex-shrink: 0;
+}
+
+.gh-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-2);
+  letter-spacing: 0.08em;
+  border: 1px solid var(--line);
+  padding: 9px 16px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  background: rgba(255,255,255,0.015);
+}
+.gh-link:hover {
+  color: var(--white);
+  border-color: var(--line-h);
+  background: rgba(255,255,255,0.03);
+}
+.gh-link svg { width: 13px; height: 13px; fill: currentColor; }
+
+.header-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  text-align: right;
+  line-height: 2;
+}
+.header-count span { color: var(--text-2); }
+
+/* Stats row */
+.header-stats {
+  display: flex;
+  gap: 40px;
+  padding-top: 28px;
+  flex-wrap: wrap;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--text-3);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ────────────────────────────────────────────
+   CONTROLS
+──────────────────────────────────────────── */
 .controls {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 40px; flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 44px;
+  flex-wrap: wrap;
 }
 
 .search-wrap {
-  position: relative; flex: 1; min-width: 220px;
+  position: relative;
+  flex: 1;
+  min-width: 200px;
 }
-.search-wrap svg {
-  position: absolute; left: 14px; top: 50%;
+.search-icon {
+  position: absolute;
+  left: 15px; top: 50%;
   transform: translateY(-50%);
-  width: 13px; height: 13px;
-  stroke: var(--muted); fill: none;
-  stroke-width: 2; stroke-linecap: round;
   pointer-events: none;
+}
+.search-icon svg {
+  width: 13px; height: 13px;
+  stroke: var(--text-3);
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
 }
 #search {
   width: 100%;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 11px 14px 11px 38px;
-  color: var(--text);
-  font-family: 'Fira Code', monospace;
-  font-size: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 11px 16px 11px 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
   letter-spacing: 0.05em;
+  color: var(--text);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-#search::placeholder { color: var(--muted); }
+#search::placeholder { color: var(--text-3); }
 #search:focus {
-  border-color: rgba(185,255,75,0.35);
-  box-shadow: 0 0 0 3px var(--a-dim);
+  border-color: rgba(158,179,240,0.3);
+  box-shadow: 0 0 0 3px rgba(158,179,240,0.04);
 }
 
-.filters {
-  display: flex; gap: 6px; flex-wrap: wrap;
-}
-.filter-btn {
-  font-family: 'Fira Code', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
+.divider { width: 1px; height: 28px; background: var(--line); flex-shrink: 0; }
+
+.filters { display: flex; gap: 4px; flex-wrap: wrap; }
+.fb {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 7px 13px;
-  border-radius: 5px;
-  border: 1px solid var(--border);
+  padding: 7px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
   background: transparent;
-  color: var(--muted);
+  color: var(--text-3);
   cursor: pointer;
   transition: all 0.18s;
+  white-space: nowrap;
 }
-.filter-btn:hover { border-color: var(--border-h); color: var(--text-dim); }
-.filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--a-dim); }
+.fb:hover { color: var(--text-2); border-color: rgba(255,255,255,0.1); }
+.fb.active {
+  background: rgba(158,179,240,0.08);
+  border-color: rgba(158,179,240,0.3);
+  color: var(--accent);
+}
 
-/* ── Grid ── */
+/* ────────────────────────────────────────────
+   GRID
+──────────────────────────────────────────── */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 1px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--line);
 }
 
-/* ── Card ── */
+/* ────────────────────────────────────────────
+   CARD
+──────────────────────────────────────────── */
 .card {
   position: relative;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+  background: var(--bg-card);
   text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.28s, transform 0.28s, box-shadow 0.28s;
-  animation: rise 0.55s cubic-bezier(0.16,1,0.3,1) both;
-}
-.card:hover {
-  border-color: var(--border-h);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-.card:hover .arrow { opacity: 1; transform: translate(3px,-3px); }
-.card:hover .card-body::after { opacity: 1; }
-
-.card-bar {
-  height: 3px;
-  width: 100%;
-  flex-shrink: 0;
-  background: var(--cat, var(--accent));
-}
-
-.card-body {
-  padding: 22px 24px 20px;
-  display: flex; flex-direction: column; flex: 1;
-  position: relative;
+  padding: 28px 28px 24px;
+  transition: background 0.22s ease;
   overflow: hidden;
+  animation: appear 0.6s cubic-bezier(0.16,1,0.3,1) both;
+  min-height: 200px;
 }
-.card-body::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at top left, var(--cat-glow, rgba(185,255,75,0.06)) 0%, transparent 65%);
+.card:hover { background: var(--bg-hover); }
+.card:hover .card-num { opacity: 0.12; }
+.card:hover .arrow-icon { opacity: 1; transform: translate(2px,-2px); }
+.card:hover .card-name { color: var(--white); }
+.card:hover .url-text { color: var(--accent); }
+
+/* Watermark number */
+.card-num {
+  position: absolute;
+  top: -8px; right: 16px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 80px;
+  color: var(--white);
+  opacity: 0.04;
+  line-height: 1;
   pointer-events: none;
-  opacity: 0;
+  letter-spacing: -0.04em;
   transition: opacity 0.3s;
+  user-select: none;
 }
 
-.card-head {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; gap: 8px;
-  margin-bottom: 14px;
+/* Top row */
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 
-.card-icon {
-  font-size: 26px; line-height: 1; flex-shrink: 0;
-}
-
-.cat-pill {
-  font-family: 'Fira Code', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
+.card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  padding: 4px 9px;
-  border-radius: 4px;
-  border: 1px solid currentColor;
-  color: var(--cat, var(--accent));
-  opacity: 0.65;
-  flex-shrink: 0;
+  color: var(--text-3);
+  padding: 4px 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 3px;
+  background: rgba(255,255,255,0.015);
 }
 
-.arrow {
-  font-size: 17px;
+.arrow-icon {
+  font-size: 16px;
   color: var(--accent);
   opacity: 0;
-  transition: opacity 0.25s, transform 0.25s;
-  margin-left: auto;
-  padding-left: 6px;
+  transition: opacity 0.22s, transform 0.22s;
+  line-height: 1;
 }
 
+/* Name */
 .card-name {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: 22px;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
+  font-size: 17.5px;
+  letter-spacing: -0.01em;
   color: var(--text);
-  line-height: 1.1;
   margin-bottom: 10px;
+  line-height: 1.2;
+  transition: color 0.2s;
 }
 
+/* Description */
 .card-desc {
-  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
   font-weight: 300;
-  font-size: 12.5px;
-  line-height: 1.65;
-  color: var(--text-dim);
-  flex: 1;
+  line-height: 1.7;
+  color: var(--text-2);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 18px;
+  flex: 1;
 }
 
-.card-footer {
-  display: flex; align-items: center;
+/* Footer */
+.card-foot {
+  margin-top: 20px;
   padding-top: 14px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.card-url {
-  font-family: 'Fira Code', monospace;
-  font-size: 10.5px;
-  color: var(--muted);
+.url-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
   letter-spacing: 0.05em;
+  transition: color 0.2s;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.2s;
 }
-.card:hover .card-url { color: var(--cat, var(--accent)); }
 
-/* ── Category vars ── */
-.cat-finance  { --cat: var(--c-finance);  --cat-glow: var(--cg-finance);  }
-.cat-consumer { --cat: var(--c-consumer); --cat-glow: var(--cg-consumer); }
-.cat-mystery  { --cat: var(--c-mystery);  --cat-glow: var(--cg-mystery);  }
-.cat-food     { --cat: var(--c-food);     --cat-glow: var(--cg-food);     }
-.cat-tool     { --cat: var(--c-tool);     --cat-glow: var(--cg-tool);     }
-.cat-health   { --cat: var(--c-health);   --cat-glow: var(--cg-health);   }
-.cat-islamic  { --cat: var(--c-islamic);  --cat-glow: var(--cg-islamic);  }
-.cat-social   { --cat: var(--c-social);   --cat-glow: var(--cg-social);   }
-.cat-crypto   { --cat: var(--c-crypto);   --cat-glow: var(--cg-crypto);   }
-.cat-exp      { --cat: var(--c-exp);      --cat-glow: var(--cg-exp);      }
-
-/* ── Stagger ── */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(24px); }
+/* ────────────────────────────────────────────
+   ANIMATION
+──────────────────────────────────────────── */
+@keyframes appear {
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.card:nth-child(1)  { animation-delay: 0.04s; }
-.card:nth-child(2)  { animation-delay: 0.09s; }
-.card:nth-child(3)  { animation-delay: 0.14s; }
-.card:nth-child(4)  { animation-delay: 0.19s; }
-.card:nth-child(5)  { animation-delay: 0.24s; }
-.card:nth-child(6)  { animation-delay: 0.29s; }
-.card:nth-child(7)  { animation-delay: 0.34s; }
-.card:nth-child(8)  { animation-delay: 0.39s; }
-.card:nth-child(9)  { animation-delay: 0.44s; }
-.card:nth-child(10) { animation-delay: 0.49s; }
-.card:nth-child(11) { animation-delay: 0.54s; }
-.card:nth-child(12) { animation-delay: 0.59s; }
-.card:nth-child(13) { animation-delay: 0.64s; }
-.card:nth-child(14) { animation-delay: 0.69s; }
+.card:nth-child(1)  { animation-delay: 0.05s; }
+.card:nth-child(2)  { animation-delay: 0.10s; }
+.card:nth-child(3)  { animation-delay: 0.15s; }
+.card:nth-child(4)  { animation-delay: 0.20s; }
+.card:nth-child(5)  { animation-delay: 0.25s; }
+.card:nth-child(6)  { animation-delay: 0.30s; }
+.card:nth-child(7)  { animation-delay: 0.35s; }
+.card:nth-child(8)  { animation-delay: 0.40s; }
+.card:nth-child(9)  { animation-delay: 0.45s; }
+.card:nth-child(10) { animation-delay: 0.50s; }
+.card:nth-child(11) { animation-delay: 0.55s; }
+.card:nth-child(12) { animation-delay: 0.60s; }
+.card:nth-child(13) { animation-delay: 0.65s; }
+.card:nth-child(14) { animation-delay: 0.70s; }
 
-/* ── Empty state ── */
+/* ────────────────────────────────────────────
+   EMPTY STATE
+──────────────────────────────────────────── */
 .empty {
   display: none;
-  grid-column: 1/-1;
+  grid-column: 1 / -1;
   padding: 80px 40px;
   text-align: center;
-  font-family: 'Fira Code', monospace;
-  font-size: 13px;
-  color: var(--muted);
-  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
 }
-.empty span { color: var(--accent); }
 .card.hidden { display: none !important; }
 
-/* ── Footer ── */
+/* ────────────────────────────────────────────
+   FOOTER
+──────────────────────────────────────────── */
 footer {
-  margin-top: 60px;
-  padding-top: 32px;
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px;
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
-.footer-left {
-  font-family: 'Fira Code', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
+.foot-l, .foot-r {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
 }
-.footer-left a { color: var(--accent); text-decoration: none; }
-.footer-left a:hover { text-decoration: underline; }
-.footer-right {
-  font-family: 'Fira Code', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-}
+.foot-l a { color: var(--text-2); text-decoration: none; transition: color 0.18s; }
+.foot-l a:hover { color: var(--accent); }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
+/* ────────────────────────────────────────────
+   RESPONSIVE
+──────────────────────────────────────────── */
+@media (max-width: 960px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .page { padding: 0 20px 80px; }
-  header { grid-template-columns: 1fr; padding: 48px 0 40px; }
-  .header-right { align-items: flex-start; }
+  header { padding: 48px 0 0; }
+  .header-top { flex-direction: column; }
+  .header-aside { align-items: flex-start; }
   .grid { grid-template-columns: 1fr; }
+  h1 { font-size: clamp(52px, 16vw, 72px); }
   .controls { flex-direction: column; align-items: stretch; }
+  .divider { display: none; }
 }
+
 </style>
 </head>
 <body>
-
-<div class="bg-fx">
-  <div class="glow glow-1"></div>
-  <div class="glow glow-2"></div>
-  <div class="glow glow-3"></div>
-</div>
-<div class="scanline"></div>
+<div class="grain"></div>
 
 <div class="page">
 
+  <!-- ── HEADER ── -->
   <header>
-    <div>
-      <div class="header-tag">personal launchpad</div>
-      <h1>IZL<em>ITNI</em></h1>
-      <div class="header-sub">
-        <span>14 apps</span> &nbsp;·&nbsp; deployed on vercel &nbsp;·&nbsp; open source
+    <div class="header-top">
+      <div>
+        <div class="header-meta">personal launchpad &nbsp;/&nbsp; 2025</div>
+        <h1>IZL<span class="outline">ITNI</span></h1>
+        <div class="header-tagline">
+          <b>14</b> apps deployed &nbsp;·&nbsp; vercel &nbsp;·&nbsp; <b>6</b> categories &nbsp;·&nbsp; open source
+        </div>
+      </div>
+      <div class="header-aside">
+        <a class="gh-link" href="https://github.com/izlitni" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          github.com/izlitni
+        </a>
+        <div class="header-count">
+          <span>14</span> apps deployed<br>
+          <span>vercel.app</span> platform
+        </div>
       </div>
     </div>
-    <div class="header-right">
-      <a class="gh-btn" href="https://github.com/izlitni" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-        github.com/izlitni
-      </a>
-      <div class="stats">
-        <strong>14</strong> deployed apps<br>
-        <strong>6</strong> categories
-      </div>
+    <div class="header-stats">
+      <div class="stat"><div class="stat-num">14</div><div class="stat-label">Applications</div></div>
+      <div class="stat"><div class="stat-num">06</div><div class="stat-label">Categories</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Free to use</div></div>
+      <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Available</div></div>
     </div>
   </header>
 
+  <!-- ── CONTROLS ── -->
   <div class="controls">
     <div class="search-wrap">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
-      <input id="search" type="text" placeholder="search apps..." autocomplete="off" spellcheck="false">
+      <div class="search-icon">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+      </div>
+      <input id="search" type="text" placeholder="search apps, categories..." autocomplete="off" spellcheck="false">
     </div>
+    <div class="divider"></div>
     <div class="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="finance">Finance</button>
-      <button class="filter-btn" data-filter="tool">Tools</button>
-      <button class="filter-btn" data-filter="islamic">Islamic</button>
-      <button class="filter-btn" data-filter="health">Health</button>
-      <button class="filter-btn" data-filter="social">Social</button>
-      <button class="filter-btn" data-filter="mystery">Mystery</button>
+      <button class="fb active" data-filter="all">All</button>
+      <button class="fb" data-filter="finance">Finance</button>
+      <button class="fb" data-filter="tool">Tools</button>
+      <button class="fb" data-filter="islamic">Islamic</button>
+      <button class="fb" data-filter="health">Health</button>
+      <button class="fb" data-filter="social">Social</button>
+      <button class="fb" data-filter="mystery">Mystery</button>
     </div>
   </div>
 
+  <!-- ── GRID ── -->
   <div class="grid" id="grid">
 
-    <a class="card cat-finance" href="https://bekbank.vercel.app" target="_blank" rel="noopener"
-       data-name="bek bank banking finance" data-cat="finance">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🏦</div>
-          <span class="cat-pill">Finance</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Bek Bank</div>
-        <div class="card-desc">Secure digital banking platform — open free accounts, send money, track balances, and manage finances with enterprise-grade security. 100% secure transfers, 24/7 access, $0 monthly fees.</div>
-        <div class="card-footer"><span class="card-url">bekbank.vercel.app</span></div>
+    <a class="card" href="https://bekbank.vercel.app" target="_blank" rel="noopener"
+       data-name="bek bank banking finance transfers" data-cat="finance">
+      <div class="card-num">01</div>
+      <div class="card-top">
+        <span class="card-label">Finance</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Bek Bank</div>
+      <div class="card-desc">Secure digital banking — open free accounts, send money, track balances, and manage finances with enterprise-grade security. 100% secure transfers, 24/7 access, $0 monthly fees.</div>
+      <div class="card-foot"><span class="url-text">bekbank.vercel.app</span></div>
     </a>
 
-    <a class="card cat-consumer" href="https://tarbija.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://tarbija.vercel.app" target="_blank" rel="noopener"
        data-name="tarbija name generator children girl boy" data-cat="mystery">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">👶</div>
-          <span class="cat-pill">Names</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Tarbija</div>
-        <div class="card-desc">A simple name-personalizing tool with gender selection. Enter a name, pick Girl or Boy, and hit Go! — ideal for children's naming ideas.</div>
-        <div class="card-footer"><span class="card-url">tarbija.vercel.app</span></div>
+      <div class="card-num">02</div>
+      <div class="card-top">
+        <span class="card-label">Names</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Tarbija</div>
+      <div class="card-desc">A simple name-personalizing tool with gender selection. Enter a name, pick Girl or Boy, and hit Go! — ideal for children's naming ideas.</div>
+      <div class="card-foot"><span class="url-text">tarbija.vercel.app</span></div>
     </a>
 
-    <a class="card cat-mystery" href="https://peteranswer.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://peteranswer.vercel.app" target="_blank" rel="noopener"
        data-name="peter answer oracle virtual mystery trick" data-cat="mystery">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🔮</div>
-          <span class="cat-pill">Mystery</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Peter Answer</div>
-        <div class="card-desc">A Virtual Oracle where users pose questions. The petition field hides a clever trick — type the answer without realizing it — then watch Peter astound your audience.</div>
-        <div class="card-footer"><span class="card-url">peteranswer.vercel.app</span></div>
+      <div class="card-num">03</div>
+      <div class="card-top">
+        <span class="card-label">Mystery</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Peter Answer</div>
+      <div class="card-desc">A Virtual Oracle where users pose questions. The petition field hides a clever trick — type the answer without realizing it — then watch Peter astound your audience.</div>
+      <div class="card-foot"><span class="url-text">peteranswer.vercel.app</span></div>
     </a>
 
-    <a class="card cat-food" href="https://fastrest.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://fastrest.vercel.app" target="_blank" rel="noopener"
        data-name="fastrest food restaurant pins images burgers pizza" data-cat="mystery">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🍔</div>
-          <span class="cat-pill">Food</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Fastrest</div>
-        <div class="card-desc">A Pinterest-style food image board. Browse curated pins across Juicy Burgers, Pizza Scampi, Dessert Porn, and even Disappointments (Lablabi). Explore, create, share.</div>
-        <div class="card-footer"><span class="card-url">fastrest.vercel.app</span></div>
+      <div class="card-num">04</div>
+      <div class="card-top">
+        <span class="card-label">Food</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Fastrest</div>
+      <div class="card-desc">A Pinterest-style food image board. Browse curated pins across Juicy Burgers, Pizza Scampi, Dessert Porn, and Disappointments (Lablabi). Explore, create, share.</div>
+      <div class="card-foot"><span class="url-text">fastrest.vercel.app</span></div>
     </a>
 
-    <a class="card cat-exp" href="https://best-experience.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://best-experience.vercel.app" target="_blank" rel="noopener"
        data-name="best experience interactive mystery click" data-cat="mystery">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">✨</div>
-          <span class="cat-pill">Experience</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Best Experience</div>
-        <div class="card-desc">Minimalist by design. A single button. One instruction: CLICK ME. What happens next is for you to discover — purpose reveals itself through interaction.</div>
-        <div class="card-footer"><span class="card-url">best-experience.vercel.app</span></div>
+      <div class="card-num">05</div>
+      <div class="card-top">
+        <span class="card-label">Experience</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Best Experience</div>
+      <div class="card-desc">Minimalist by design. A single button. One instruction: CLICK ME. What happens next is for you to discover — purpose reveals itself through interaction alone.</div>
+      <div class="card-foot"><span class="url-text">best-experience.vercel.app</span></div>
     </a>
 
-    <a class="card cat-health" href="https://cjc1295-ipamorelin.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://cjc1295-ipamorelin.vercel.app" target="_blank" rel="noopener"
        data-name="cjc 1295 ipamorelin peptide search guide health biotech" data-cat="health">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🧬</div>
-          <span class="cat-pill">Health</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">CJC-1295 / Ipamorelin</div>
-        <div class="card-desc">Comprehensive guide to the CJC-1295 & Ipamorelin peptide combo — mechanisms, key benefits (muscle, fat loss, recovery, anti-aging), protocols, and comparisons with IGF-1.</div>
-        <div class="card-footer"><span class="card-url">cjc1295-ipamorelin.vercel.app</span></div>
+      <div class="card-num">06</div>
+      <div class="card-top">
+        <span class="card-label">Health</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">CJC-1295 / Ipamorelin</div>
+      <div class="card-desc">Comprehensive guide to the CJC-1295 & Ipamorelin peptide combination — mechanisms, key benefits (muscle, fat loss, recovery, anti-aging), protocols, and IGF-1 comparisons.</div>
+      <div class="card-foot"><span class="url-text">cjc1295-ipamorelin.vercel.app</span></div>
     </a>
 
-    <a class="card cat-tool" href="https://simple-hash.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://simple-hash.vercel.app" target="_blank" rel="noopener"
        data-name="simple hash generator tool cryptography algorithm" data-cat="tool">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">#</div>
-          <span class="cat-pill">Tool</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Simple Hash</div>
-        <div class="card-desc">Hash Generator using Poly-31: (h × 31 + v) % 9999991. Input text, get a 7-digit hash, toggle Encryption Mode to hide breakdowns, and explore the built-in Collision Finder.</div>
-        <div class="card-footer"><span class="card-url">simple-hash.vercel.app</span></div>
+      <div class="card-num">07</div>
+      <div class="card-top">
+        <span class="card-label">Tool</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Simple Hash</div>
+      <div class="card-desc">Hash Generator using Poly-31: (h × 31 + v) % 9999991. Input text, get a 7-digit hash, toggle Encryption Mode to hide breakdowns, and explore the built-in Collision Finder.</div>
+      <div class="card-foot"><span class="url-text">simple-hash.vercel.app</span></div>
     </a>
 
-    <a class="card cat-islamic" href="https://meeqat-v1.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://meeqat-v1.vercel.app" target="_blank" rel="noopener"
        data-name="meeqat prayer times islamic v1 city" data-cat="islamic">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🕌</div>
-          <span class="cat-pill">Islamic</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Meeqat v1</div>
-        <div class="card-desc">Prayer times app with live clock. Search any city or country for accurate prayer schedules, with a toggle between 12-hour and 24-hour formats.</div>
-        <div class="card-footer"><span class="card-url">meeqat-v1.vercel.app</span></div>
+      <div class="card-num">08</div>
+      <div class="card-top">
+        <span class="card-label">Islamic</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Meeqat v1</div>
+      <div class="card-desc">Prayer times app with live clock. Search any city or country for accurate prayer schedules, with a toggle between 12-hour and 24-hour formats.</div>
+      <div class="card-foot"><span class="url-text">meeqat-v1.vercel.app</span></div>
     </a>
 
-    <a class="card cat-islamic" href="https://meeqat-v2.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://meeqat-v2.vercel.app" target="_blank" rel="noopener"
        data-name="meeqat prayer times islamic v2 weather updated" data-cat="islamic">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🌙</div>
-          <span class="cat-pill">Islamic</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Meeqat v2</div>
-        <div class="card-desc">Upgraded prayer times experience — cleaner interface, city search with prayer schedules and weather info, real-time clock, and 24-hour format toggle.</div>
-        <div class="card-footer"><span class="card-url">meeqat-v2.vercel.app</span></div>
+      <div class="card-num">09</div>
+      <div class="card-top">
+        <span class="card-label">Islamic</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Meeqat v2</div>
+      <div class="card-desc">Upgraded prayer times experience — cleaner interface, city search with prayer schedules and weather info, real-time clock, and 24-hour format toggle.</div>
+      <div class="card-foot"><span class="url-text">meeqat-v2.vercel.app</span></div>
     </a>
 
-    <a class="card cat-health" href="https://evo-2-hazel.vercel.app" target="_blank" rel="noopener"
-       data-name="evo 2 search AI genomics DNA biotech nature" data-cat="health">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🔬</div>
-          <span class="cat-pill">Biotech</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Evo 2 Search</div>
-        <div class="card-desc">Explore Evo 2 — a revolutionary AI model trained on DNA base pairs to understand, predict, and design genetic code. Published in Nature. Open source for medicine and biotech.</div>
-        <div class="card-footer"><span class="card-url">evo-2-hazel.vercel.app</span></div>
+    <a class="card" href="https://evo-2-hazel.vercel.app" target="_blank" rel="noopener"
+       data-name="evo 2 search AI genomics DNA biotech nature science" data-cat="health">
+      <div class="card-num">10</div>
+      <div class="card-top">
+        <span class="card-label">Biotech</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Evo 2 Search</div>
+      <div class="card-desc">Explore Evo 2 — a revolutionary AI model trained on DNA base pairs to understand, predict, and design genetic code. Published in Nature. Open source for medicine and biotech.</div>
+      <div class="card-foot"><span class="url-text">evo-2-hazel.vercel.app</span></div>
     </a>
 
-    <a class="card cat-crypto" href="https://enc-tools.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://enc-tools.vercel.app" target="_blank" rel="noopener"
        data-name="cryptotoolkit encryption crypto hashing AES file tool" data-cat="tool">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🔐</div>
-          <span class="cat-pill">Crypto</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">CRYPTOTOOLKIT</div>
-        <div class="card-desc">v6 Crypto Dashboard for text and file encryption. Text hashing, file hashing, AES utilities, and a hash analyzer — your all-in-one cryptographic operations suite.</div>
-        <div class="card-footer"><span class="card-url">enc-tools.vercel.app</span></div>
+      <div class="card-num">11</div>
+      <div class="card-top">
+        <span class="card-label">Crypto</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">CRYPTOTOOLKIT</div>
+      <div class="card-desc">v6 Crypto Dashboard for text and file encryption. Text hashing, file hashing, AES utilities, and a hash analyzer — all-in-one cryptographic operations suite.</div>
+      <div class="card-foot"><span class="url-text">enc-tools.vercel.app</span></div>
     </a>
 
-    <a class="card cat-islamic" href="https://ramadan-dashapp.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://ramadan-dashapp.vercel.app" target="_blank" rel="noopener"
        data-name="ramadan dashboard iftar quran tracker 5atma" data-cat="islamic">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">☪️</div>
-          <span class="cat-pill">Islamic</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">Ramadan Dashboard</div>
-        <div class="card-desc">Your personal Ramadan companion — track time until Iftar, manage daily religious goals, and monitor Quran reading progress with the 5atma Coach throughout the holy month.</div>
-        <div class="card-footer"><span class="card-url">ramadan-dashapp.vercel.app</span></div>
+      <div class="card-num">12</div>
+      <div class="card-top">
+        <span class="card-label">Islamic</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">Ramadan Dashboard</div>
+      <div class="card-desc">Your personal Ramadan companion — track time until Iftar, manage daily religious goals, and monitor Quran reading progress with the 5atma Coach throughout the holy month.</div>
+      <div class="card-foot"><span class="url-text">ramadan-dashapp.vercel.app</span></div>
     </a>
 
-    <a class="card cat-social" href="https://dh-send.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://dh-send.vercel.app" target="_blank" rel="noopener"
        data-name="dh send discord webhook message sender username" data-cat="social">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">📨</div>
-          <span class="cat-pill">Social</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">DH Send</div>
-        <div class="card-desc">Discord Webhook Sender — input a webhook URL, customize the sender's username, and broadcast messages directly to any Discord channel without opening the app.</div>
-        <div class="card-footer"><span class="card-url">dh-send.vercel.app</span></div>
+      <div class="card-num">13</div>
+      <div class="card-top">
+        <span class="card-label">Social</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">DH Send</div>
+      <div class="card-desc">Discord Webhook Sender — input a webhook URL, set a custom username, and broadcast messages directly to any Discord channel without opening the app.</div>
+      <div class="card-foot"><span class="url-text">dh-send.vercel.app</span></div>
     </a>
 
-    <a class="card cat-social" href="https://g-whisper.vercel.app" target="_blank" rel="noopener"
+    <a class="card" href="https://g-whisper.vercel.app" target="_blank" rel="noopener"
        data-name="g whisper terminal transmission chat anonymous voice" data-cat="social">
-      <div class="card-bar"></div>
-      <div class="card-body">
-        <div class="card-head">
-          <div class="card-icon">🎙️</div>
-          <span class="cat-pill">Social</span>
-          <span class="arrow">↗</span>
-        </div>
-        <div class="card-name">G-Whisper</div>
-        <div class="card-desc">Terminal Transmission — a minimalist chat platform with a raw terminal aesthetic. Set an alias (or stay Anonymous), hit CONNECT, and transmit. No noise, just signal.</div>
-        <div class="card-footer"><span class="card-url">g-whisper.vercel.app</span></div>
+      <div class="card-num">14</div>
+      <div class="card-top">
+        <span class="card-label">Social</span>
+        <span class="arrow-icon">↗</span>
       </div>
+      <div class="card-name">G-Whisper</div>
+      <div class="card-desc">Terminal Transmission — a minimalist communication platform with raw terminal aesthetics. Set an alias (or stay Anonymous), hit CONNECT, and transmit. No noise, just signal.</div>
+      <div class="card-foot"><span class="url-text">g-whisper.vercel.app</span></div>
     </a>
 
-    <div class="empty" id="empty">// <span>no results</span> for that query</div>
+    <div class="empty" id="empty">— no results —</div>
+
   </div>
 
+  <!-- ── FOOTER ── -->
   <footer>
-    <div class="footer-left">
-      built by <a href="https://github.com/izlitni" target="_blank">izlitni</a> &nbsp;·&nbsp; hosted on vercel
+    <div class="foot-l">
+      built by <a href="https://github.com/izlitni" target="_blank" rel="noopener">izlitni</a>
+      &nbsp;·&nbsp; deployed on vercel
     </div>
-    <div class="footer-right">14 apps &nbsp;·&nbsp; open in browser</div>
+    <div class="foot-r">© 2025 &nbsp;·&nbsp; 14 applications</div>
   </footer>
 
 </div>
 
 <script>
-  const input = document.getElementById('search');
-  const cards = document.querySelectorAll('.card[data-name]');
-  const empty = document.getElementById('empty');
-  let activeFilter = 'all';
+  const input  = document.getElementById('search');
+  const cards  = document.querySelectorAll('.card[data-name]');
+  const empty  = document.getElementById('empty');
+  let filter   = 'all';
 
-  function applyFilters() {
+  function update() {
     const q = input.value.toLowerCase().trim();
     let n = 0;
-    cards.forEach(card => {
-      const nameMatch = card.dataset.name.includes(q);
-      const catMatch  = activeFilter === 'all' || card.dataset.cat === activeFilter;
-      const show = nameMatch && catMatch;
-      card.classList.toggle('hidden', !show);
-      if (show) n++;
+    cards.forEach(c => {
+      const ok = c.dataset.name.includes(q) &&
+                 (filter === 'all' || c.dataset.cat === filter);
+      c.classList.toggle('hidden', !ok);
+      if (ok) n++;
     });
     empty.style.display = n === 0 ? 'block' : 'none';
   }
 
-  input.addEventListener('input', applyFilters);
+  input.addEventListener('input', update);
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeFilter = btn.dataset.filter;
-      applyFilters();
+  document.querySelectorAll('.fb').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.fb').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      filter = b.dataset.filter;
+      update();
     });
   });
 </script>
