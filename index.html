@@ -2,762 +2,781 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>izlitni — apps</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Nunito+Sans:ital,wght@0,200;0,300;0,400;1,300&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>izlitni</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+:root{
+  --bg:#000;--text:#fafafa;--text-2:#a1a1aa;--muted:#71717a;
+  --border:#1f1f23;--accent-1:#8b5cf6;--accent-2:#22d3ee;
+  --card:rgba(255,255,255,0.02);--card-border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#000;color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:16px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+.background{position:fixed;inset:0;z-index:-3;background:#000}
+.background::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(700px 420px at 12% -5%,rgba(139,92,246,0.15),transparent 60%),
+    radial-gradient(600px 380px at 88% 115%,rgba(34,211,238,0.12),transparent 60%);
+}
+.background::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse at center,black 35%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse at center,black 35%,transparent 70%);
+}
+.noise{
+  position:fixed;inset:0;z-index:-2;opacity:.028;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.cursor-glow{
+  position:fixed;top:0;left:0;width:280px;height:280px;border-radius:50%;
+  pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,rgba(139,92,246,0.14) 0%,rgba(34,211,238,0.08) 35%,transparent 70%);
+  filter:blur(42px);opacity:0;transition:opacity .4s;will-change:transform;
+}
+@media(pointer:fine){.cursor-glow{opacity:.85}}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
 
-/* ────────────────────────────────────────────
-   TOKENS
-──────────────────────────────────────────── */
-:root {
-  --bg:        #060810;
-  --bg-card:   #0a0d16;
-  --bg-hover:  #0d1020;
-  --line:      rgba(255,255,255,0.065);
-  --line-h:    rgba(255,255,255,0.14);
-  --text:      #d8dce8;
-  --text-2:    #7d86a0;
-  --text-3:    #3c4260;
-  --accent:    #9eb3f0;
-  --accent-d:  rgba(158,179,240,0.1);
-  --white:     #eceef5;
+/* Header */
+header{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);
+  border-bottom:1px solid transparent;transition:all .3s ease;
 }
+header .inner{
+  height:88px;display:flex;align-items:center;justify-content:space-between;transition:height .3s ease;
+}
+header.scrolled{
+  background:rgba(0,0,0,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-color:var(--border);
+}
+header.scrolled .inner{height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--muted)}
+.logo-mark{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02));
+  border:1px solid var(--card-border);display:grid;place-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);
+  backdrop-filter:blur(8px);transition:all .3s;
+}
+header.scrolled .logo-mark{
+  background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02));
+  border-color:rgba(139,92,246,0.2);color:var(--accent-1);
+}
+.logo-text{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.02em;color:var(--muted);transition:color .3s}
+header.scrolled .logo-text{color:var(--text-2)}
+nav{display:flex;gap:28px;align-items:center}
+nav a{
+  color:var(--muted);text-decoration:none;font-size:13px;
+  font-family:'JetBrains Mono',monospace;transition:color .2s;position:relative;
+}
+nav a:hover{color:var(--text)}
+nav a::after{
+  content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;
+  background:linear-gradient(90deg,var(--accent-1),var(--accent-2));transition:width .2s;
+}
+nav a:hover::after{width:100%}
 
-/* ────────────────────────────────────────────
-   RESET & BASE
-──────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* Mobile Menu */
+.menu-toggle{
+  display:none;appearance:none;background:transparent;border:1px solid var(--card-border);
+  color:var(--muted);width:36px;height:36px;border-radius:10px;cursor:pointer;
+  place-items:center;transition:all .2s;
+}
+.menu-toggle:hover{border-color:rgba(255,255,255,0.15);color:var(--text)}
+@media(max-width:640px){
+  nav.desktop{display:none}
+  .menu-toggle{display:grid}
+}
+.mobile-menu{
+  position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.95);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.mobile-menu.open{opacity:1;pointer-events:all}
+.mobile-menu a{
+  font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--text-2);
+  text-decoration:none;transition:color .2s;
+}
+.mobile-menu a:hover{color:var(--text)}
+.mobile-close{
+  position:absolute;top:20px;right:24px;appearance:none;background:transparent;
+  border:1px solid var(--card-border);color:var(--muted);width:40px;height:40px;
+  border-radius:12px;cursor:pointer;font-size:18px;display:grid;place-items:center;transition:all .2s;
+}
+.mobile-close:hover{border-color:rgba(255,255,255,0.2);color:var(--text)}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 300;
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
+/* Main */
+main{padding-top:96px}
+section{margin-bottom:128px;opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+section.in{opacity:1;transform:none}
 
-/* ────────────────────────────────────────────
-   BACKGROUND LAYER
-──────────────────────────────────────────── */
-/* Dot matrix */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-  z-index: 0;
+/* Hero */
+.hero{margin-bottom:160px}
+.hero-top{display:flex;align-items:center;gap:18px;margin-bottom:28px}
+.hero-avatar{
+  width:56px;height:56px;border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.015));
+  border:1px solid var(--card-border);backdrop-filter:blur(16px);
+  display:grid;place-items:center;position:relative;overflow:hidden;
 }
+.hero-avatar::before{
+  content:"";position:absolute;inset:-1px;
+  background:radial-gradient(70px at 30% 20%,rgba(139,92,246,0.35),transparent 55%);opacity:.9;
+}
+.hero-avatar span{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;position:relative;z-index:1}
+.hero-status{
+  display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-2);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.hero-status .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--accent-2);
+  box-shadow:0 0 12px rgba(34,211,238,0.6);animation:pulse 2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.title{
+  font-family:'JetBrains Mono',monospace;font-size:72px;font-weight:700;
+  letter-spacing:-0.03em;line-height:1;margin:0 0 20px;
+  background:linear-gradient(135deg,var(--text) 0%,var(--text-2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.title .cursor{
+  display:inline-block;width:3px;height:.85em;background:var(--accent-1);
+  margin-left:4px;animation:blink 1.1s steps(1) infinite;transform:translateY(5px);
+  box-shadow:0 0 8px rgba(139,92,246,0.6);vertical-align:baseline;
+}
+@keyframes blink{0%,45%{opacity:1}50%,100%{opacity:0}}
+.tagline{font-size:18px;color:var(--text-2);margin-bottom:6px;font-weight:400}
+.subtext{color:var(--muted);font-size:16px;max-width:520px;line-height:1.8}
 
-/* Vignette */
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(60,80,160,0.06) 0%, transparent 70%),
-              radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30,40,100,0.05) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
+/* Section Label */
+.section-label{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--muted);margin-bottom:28px;display:flex;align-items:center;gap:12px;
 }
-
-/* Grain */
-.grain {
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  opacity: 0.022;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* ────────────────────────────────────────────
-   PAGE
-──────────────────────────────────────────── */
-.page {
-  position: relative; z-index: 1;
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 0 40px 120px;
-}
-
-/* ────────────────────────────────────────────
-   HEADER
-──────────────────────────────────────────── */
-header {
-  padding: 80px 0 0;
-  margin-bottom: 72px;
-}
-
-.header-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 32px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--line);
-  flex-wrap: wrap;
-}
-
-.header-meta {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  color: var(--text-3);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.header-meta::before {
-  content: '';
-  display: inline-block;
-  width: 18px; height: 1px;
-  background: var(--accent);
-  opacity: 0.6;
-}
-
-h1 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(64px, 9.5vw, 128px);
-  line-height: 0.88;
-  letter-spacing: -0.03em;
-  color: var(--white);
-  text-transform: uppercase;
-}
-
-h1 .outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(158,179,240,0.5);
-}
-
-.header-tagline {
-  margin-top: 22px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text-3);
-  letter-spacing: 0.1em;
-  line-height: 2;
-}
-.header-tagline b { color: var(--accent); font-weight: 400; }
-
-/* Right side */
-.header-aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 16px;
-  padding-top: 4px;
-  flex-shrink: 0;
-}
-
-.gh-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text-2);
-  letter-spacing: 0.08em;
-  border: 1px solid var(--line);
-  padding: 9px 16px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  background: rgba(255,255,255,0.015);
-}
-.gh-link:hover {
-  color: var(--white);
-  border-color: var(--line-h);
-  background: rgba(255,255,255,0.03);
-}
-.gh-link svg { width: 13px; height: 13px; fill: currentColor; }
-
-.header-count {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-  letter-spacing: 0.12em;
-  text-align: right;
-  line-height: 2;
-}
-.header-count span { color: var(--text-2); }
-
-/* Stats row */
-.header-stats {
-  display: flex;
-  gap: 40px;
-  padding-top: 28px;
-  flex-wrap: wrap;
-}
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.stat-num {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 28px;
-  color: var(--white);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.stat-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
-  color: var(--text-3);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.section-label::before{
+  content:"";width:26px;height:1px;
+  background:linear-gradient(90deg,var(--accent-1),transparent);opacity:.6;
 }
 
-/* ────────────────────────────────────────────
-   CONTROLS
-──────────────────────────────────────────── */
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 44px;
-  flex-wrap: wrap;
+/* About */
+.about p{color:var(--text-2);max-width:640px;margin-bottom:1.15em}
+.about p:first-of-type::first-letter{
+  font-family:'JetBrains Mono',monospace;float:left;font-size:3.1em;line-height:.8;
+  margin:.09em .13em 0 0;color:var(--text);opacity:.75;
 }
+.skills{
+  display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:12px;
+}
+.skill-tag{
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-2);
+  padding:5px 10px;border:1px solid var(--card-border);border-radius:8px;
+  transition:all .2s;cursor:default;
+}
+.skill-tag:hover{
+  border-color:rgba(139,92,246,0.3);color:var(--text);
+  background:rgba(139,92,246,0.05);
+}
+.skill-tag .sep{color:#2a2a30;margin:0 2px;user-select:none;display:none}
 
-.search-wrap {
-  position: relative;
-  flex: 1;
-  min-width: 200px;
+/* Work */
+.work-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:720px){.work-grid{grid-template-columns:1fr 1fr}}
+.card{
+  position:relative;background:var(--card);border:1px solid var(--card-border);
+  border-radius:24px;padding:28px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  transition:border-color .3s,box-shadow .3s,transform .3s cubic-bezier(.2,.8,.2,1);overflow:hidden;will-change:transform;
+  opacity:0;transform:translateY(20px);
 }
-.search-icon {
-  position: absolute;
-  left: 15px; top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
+.card.in{opacity:1;transform:translateY(0)}
+.card::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(420px 200px at var(--mx,50%) var(--my,0%),rgba(139,92,246,0.09),transparent 65%);
+  opacity:0;transition:opacity .3s;pointer-events:none;
 }
-.search-icon svg {
-  width: 13px; height: 13px;
-  stroke: var(--text-3);
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
+.card::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  opacity:0;transition:opacity .3s;
 }
-#search {
-  width: 100%;
-  background: var(--bg-card);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  padding: 11px 16px 11px 40px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  letter-spacing: 0.05em;
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+.card:hover{
+  border-color:rgba(255,255,255,0.12);
+  box-shadow:0 20px 50px -24px rgba(0,0,0,0.9),0 0 0 1px rgba(255,255,255,0.03) inset,0 0 30px rgba(139,92,246,0.04);
+  transform:translateY(-3px);
 }
-#search::placeholder { color: var(--text-3); }
-#search:focus {
-  border-color: rgba(158,179,240,0.3);
-  box-shadow: 0 0 0 3px rgba(158,179,240,0.04);
+.card:hover::before{opacity:1}
+.card:hover::after{opacity:.6}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.card-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.06em;opacity:.5}
+.card-icon{
+  width:28px;height:28px;border-radius:8px;border:1px solid var(--card-border);
+  display:grid;place-items:center;transition:all .3s;
 }
+.card:hover .card-icon{border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.05)}
+.card-icon svg{width:14px;height:14px;stroke:var(--muted);transition:stroke .3s;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.card:hover .card-icon svg{stroke:var(--accent-1)}
+.card h3{font-size:19px;font-weight:500;margin-bottom:8px;letter-spacing:-.01em}
+.card p{color:var(--text-2);font-size:14px;line-height:1.6;margin-bottom:22px}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.card-tag{
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
+  padding:3px 7px;border-radius:5px;background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.04);letter-spacing:.03em;
+}
+.card-meta{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11.5px}
+.stack{color:var(--muted)}
+.card-link{color:var(--text-2);text-decoration:none;position:relative;transition:color .2s;display:inline-flex;align-items:center;gap:4px}
+.card-link::after{
+  content:"";position:absolute;left:0;bottom:-3px;width:100%;height:1px;
+  background:linear-gradient(90deg,var(--accent-1),var(--accent-2));transform:scaleX(0);transform-origin:left;transition:transform .22s;
+}
+.card-link:hover{color:var(--text)}
+.card-link:hover::after{transform:scaleX(1)}
+.card-link svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s}
+.card-link:hover svg{transform:translate(2px,-2px)}
 
-.divider { width: 1px; height: 28px; background: var(--line); flex-shrink: 0; }
+.more-link{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);
+  text-decoration:none;transition:color .2s;margin-top:24px;
+}
+.more-link:hover{color:var(--accent-1)}
+.more-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s}
+.more-link:hover svg{transform:translateX(3px)}
 
-.filters { display: flex; gap: 4px; flex-wrap: wrap; }
-.fb {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 7px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--text-3);
-  cursor: pointer;
-  transition: all 0.18s;
-  white-space: nowrap;
+/* Principles */
+.principles{list-style:none;display:grid;gap:12px;max-width:560px}
+.principles li{
+  position:relative;padding:16px 18px 16px 20px;background:var(--card);
+  border:1px solid var(--card-border);border-radius:14px;overflow:hidden;
+  transition:all .3s;
 }
-.fb:hover { color: var(--text-2); border-color: rgba(255,255,255,0.1); }
-.fb.active {
-  background: rgba(158,179,240,0.08);
-  border-color: rgba(158,179,240,0.3);
-  color: var(--accent);
+.principles li::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--accent-1),var(--accent-2));opacity:.85;
 }
+.principles li:hover{border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.03)}
+.principles li span{font-family:'JetBrains Mono',monospace;font-size:13.5px;color:var(--text-2);letter-spacing:.01em}
 
-/* ────────────────────────────────────────────
-   GRID
-──────────────────────────────────────────── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--line);
+/* Contact */
+.contact-block{
+  background:var(--card);border:1px solid var(--card-border);border-radius:24px;
+  padding:6px;backdrop-filter:blur(16px);max-width:640px;
 }
-
-/* ────────────────────────────────────────────
-   CARD
-──────────────────────────────────────────── */
-.card {
-  position: relative;
-  background: var(--bg-card);
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  padding: 28px 28px 24px;
-  transition: background 0.22s ease;
-  overflow: hidden;
-  animation: appear 0.6s cubic-bezier(0.16,1,0.3,1) both;
-  min-height: 200px;
+.contact-row{display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;transition:background .2s}
+.contact-row:not(:last-child){border-bottom:1px solid rgba(255,255,255,0.045)}
+.contact-row:hover{background:rgba(255,255,255,0.02)}
+.contact-k{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);width:68px;flex-shrink:0;text-transform:lowercase;letter-spacing:.02em}
+.contact-v{font-family:'JetBrains Mono',monospace;font-size:13.5px;color:var(--text-2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:all .3s}
+.contact-v a{color:var(--text-2);text-decoration:none;transition:color .2s}
+.contact-v a:hover{color:var(--text)}
+.cipher{letter-spacing:.14em;font-size:12px!important;opacity:.55;cursor:default;transition:all .35s cubic-bezier(.2,.8,.2,1)}
+.cipher:hover, .cipher.decoded{letter-spacing:.02em;font-size:13.5px!important;opacity:1;color:var(--text)}
+.copy-btn{
+  appearance:none;background:transparent;border:1px solid var(--card-border);
+  color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;
+  padding:6px 10px;border-radius:8px;cursor:pointer;transition:all .18s;text-transform:lowercase;flex-shrink:0;
 }
-.card:hover { background: var(--bg-hover); }
-.card:hover .card-num { opacity: 0.12; }
-.card:hover .arrow-icon { opacity: 1; transform: translate(2px,-2px); }
-.card:hover .card-name { color: var(--white); }
-.card:hover .url-text { color: var(--accent); }
-
-/* Watermark number */
-.card-num {
-  position: absolute;
-  top: -8px; right: 16px;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 80px;
-  color: var(--white);
-  opacity: 0.04;
-  line-height: 1;
-  pointer-events: none;
-  letter-spacing: -0.04em;
-  transition: opacity 0.3s;
-  user-select: none;
-}
-
-/* Top row */
-.card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.card-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  padding: 4px 8px;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 3px;
-  background: rgba(255,255,255,0.015);
-}
-
-.arrow-icon {
-  font-size: 16px;
-  color: var(--accent);
-  opacity: 0;
-  transition: opacity 0.22s, transform 0.22s;
-  line-height: 1;
-}
-
-/* Name */
-.card-name {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 17.5px;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  margin-bottom: 10px;
-  line-height: 1.2;
-  transition: color 0.2s;
-}
-
-/* Description */
-.card-desc {
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 1.7;
-  color: var(--text-2);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  flex: 1;
-}
+.copy-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.18);background:rgba(255,255,255,0.03)}
+.copy-btn:active{transform:scale(.96)}
 
 /* Footer */
-.card-foot {
-  margin-top: 20px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11.5px}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.footer-dot{width:4px;height:4px;border-radius:50%;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));opacity:.7}
 
-.url-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-  letter-spacing: 0.05em;
-  transition: color 0.2s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* Toast */
+.toast{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:rgba(12,12,14,0.9);border:1px solid var(--card-border);backdrop-filter:blur(16px);
+  padding:10px 16px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  color:var(--text-2);opacity:0;pointer-events:none;transition:all .28s cubic-bezier(.2,.8,.2,1);
+  z-index:100;box-shadow:0 10px 30px rgba(0,0,0,0.55);display:flex;align-items:center;gap:8px;
 }
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:14px;height:14px;stroke:var(--accent-2);fill:none;stroke-width:2}
 
-/* ────────────────────────────────────────────
-   ANIMATION
-──────────────────────────────────────────── */
-@keyframes appear {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+::selection{background:rgba(139,92,246,0.28);color:white}
+@media(max-width:640px){
+  .title{font-size:48px}
+  main{padding-top:64px}
+  section{margin-bottom:96px}
+  header .inner{height:72px}
+  .hero{margin-bottom:100px}
+  .card{padding:22px}
+  .contact-v{font-size:12px}
+  .cipher{font-size:10px!important}
+  .hero-avatar{width:44px;height:44px}
+  .hero-avatar span{font-size:22px}
 }
-.card:nth-child(1)  { animation-delay: 0.05s; }
-.card:nth-child(2)  { animation-delay: 0.10s; }
-.card:nth-child(3)  { animation-delay: 0.15s; }
-.card:nth-child(4)  { animation-delay: 0.20s; }
-.card:nth-child(5)  { animation-delay: 0.25s; }
-.card:nth-child(6)  { animation-delay: 0.30s; }
-.card:nth-child(7)  { animation-delay: 0.35s; }
-.card:nth-child(8)  { animation-delay: 0.40s; }
-.card:nth-child(9)  { animation-delay: 0.45s; }
-.card:nth-child(10) { animation-delay: 0.50s; }
-.card:nth-child(11) { animation-delay: 0.55s; }
-.card:nth-child(12) { animation-delay: 0.60s; }
-.card:nth-child(13) { animation-delay: 0.65s; }
-.card:nth-child(14) { animation-delay: 0.70s; }
-
-/* ────────────────────────────────────────────
-   EMPTY STATE
-──────────────────────────────────────────── */
-.empty {
-  display: none;
-  grid-column: 1 / -1;
-  padding: 80px 40px;
-  text-align: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--text-3);
-  letter-spacing: 0.12em;
-}
-.card.hidden { display: none !important; }
-
-/* ────────────────────────────────────────────
-   FOOTER
-──────────────────────────────────────────── */
-footer {
-  margin-top: 56px;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.foot-l, .foot-r {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  color: var(--text-3);
-  letter-spacing: 0.1em;
-}
-.foot-l a { color: var(--text-2); text-decoration: none; transition: color 0.18s; }
-.foot-l a:hover { color: var(--accent); }
-
-/* ────────────────────────────────────────────
-   RESPONSIVE
-──────────────────────────────────────────── */
-@media (max-width: 960px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-  .page { padding: 0 20px 80px; }
-  header { padding: 48px 0 0; }
-  .header-top { flex-direction: column; }
-  .header-aside { align-items: flex-start; }
-  .grid { grid-template-columns: 1fr; }
-  h1 { font-size: clamp(52px, 16vw, 72px); }
-  .controls { flex-direction: column; align-items: stretch; }
-  .divider { display: none; }
-}
-
 </style>
 </head>
 <body>
-<div class="grain"></div>
-
-<div class="page">
-
-  <!-- ── HEADER ── -->
-  <header>
-    <div class="header-top">
-      <div>
-        <div class="header-meta">personal launchpad &nbsp;/&nbsp; 2025</div>
-        <h1>IZL<span class="outline">ITNI</span></h1>
-        <div class="header-tagline">
-          <b>14</b> apps deployed &nbsp;·&nbsp; vercel &nbsp;·&nbsp; <b>6</b> categories &nbsp;·&nbsp; open source
-        </div>
-      </div>
-      <div class="header-aside">
-        <a class="gh-link" href="https://github.com/izlitni" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-          github.com/izlitni
-        </a>
-        <div class="header-count">
-          <span>14</span> apps deployed<br>
-          <span>vercel.app</span> platform
-        </div>
-      </div>
-    </div>
-    <div class="header-stats">
-      <div class="stat"><div class="stat-num">14</div><div class="stat-label">Applications</div></div>
-      <div class="stat"><div class="stat-num">06</div><div class="stat-label">Categories</div></div>
-      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Free to use</div></div>
-      <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Available</div></div>
-    </div>
-  </header>
-
-  <!-- ── CONTROLS ── -->
-  <div class="controls">
-    <div class="search-wrap">
-      <div class="search-icon">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
-      </div>
-      <input id="search" type="text" placeholder="search apps, categories..." autocomplete="off" spellcheck="false">
-    </div>
-    <div class="divider"></div>
-    <div class="filters">
-      <button class="fb active" data-filter="all">All</button>
-      <button class="fb" data-filter="finance">Finance</button>
-      <button class="fb" data-filter="tool">Tools</button>
-      <button class="fb" data-filter="islamic">Islamic</button>
-      <button class="fb" data-filter="health">Health</button>
-      <button class="fb" data-filter="social">Social</button>
-      <button class="fb" data-filter="mystery">Mystery</button>
-    </div>
-  </div>
-
-  <!-- ── GRID ── -->
-  <div class="grid" id="grid">
-
-    <a class="card" href="https://bekbank.vercel.app" target="_blank" rel="noopener"
-       data-name="bek bank banking finance transfers" data-cat="finance">
-      <div class="card-num">01</div>
-      <div class="card-top">
-        <span class="card-label">Finance</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Bek Bank</div>
-      <div class="card-desc">Secure digital banking — open free accounts, send money, track balances, and manage finances with enterprise-grade security. 100% secure transfers, 24/7 access, $0 monthly fees.</div>
-      <div class="card-foot"><span class="url-text">bekbank.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://tarbija.vercel.app" target="_blank" rel="noopener"
-       data-name="tarbija name generator children girl boy" data-cat="mystery">
-      <div class="card-num">02</div>
-      <div class="card-top">
-        <span class="card-label">Names</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Tarbija</div>
-      <div class="card-desc">A simple name-personalizing tool with gender selection. Enter a name, pick Girl or Boy, and hit Go! — ideal for children's naming ideas.</div>
-      <div class="card-foot"><span class="url-text">tarbija.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://peteranswer.vercel.app" target="_blank" rel="noopener"
-       data-name="peter answer oracle virtual mystery trick" data-cat="mystery">
-      <div class="card-num">03</div>
-      <div class="card-top">
-        <span class="card-label">Mystery</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Peter Answer</div>
-      <div class="card-desc">A Virtual Oracle where users pose questions. The petition field hides a clever trick — type the answer without realizing it — then watch Peter astound your audience.</div>
-      <div class="card-foot"><span class="url-text">peteranswer.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://fastrest.vercel.app" target="_blank" rel="noopener"
-       data-name="fastrest food restaurant pins images burgers pizza" data-cat="mystery">
-      <div class="card-num">04</div>
-      <div class="card-top">
-        <span class="card-label">Food</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Fastrest</div>
-      <div class="card-desc">A Pinterest-style food image board. Browse curated pins across Juicy Burgers, Pizza Scampi, Dessert Porn, and Disappointments (Lablabi). Explore, create, share.</div>
-      <div class="card-foot"><span class="url-text">fastrest.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://best-experience.vercel.app" target="_blank" rel="noopener"
-       data-name="best experience interactive mystery click" data-cat="mystery">
-      <div class="card-num">05</div>
-      <div class="card-top">
-        <span class="card-label">Experience</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Best Experience</div>
-      <div class="card-desc">Minimalist by design. A single button. One instruction: CLICK ME. What happens next is for you to discover — purpose reveals itself through interaction alone.</div>
-      <div class="card-foot"><span class="url-text">best-experience.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://cjc1295-ipamorelin.vercel.app" target="_blank" rel="noopener"
-       data-name="cjc 1295 ipamorelin peptide search guide health biotech" data-cat="health">
-      <div class="card-num">06</div>
-      <div class="card-top">
-        <span class="card-label">Health</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">CJC-1295 / Ipamorelin</div>
-      <div class="card-desc">Comprehensive guide to the CJC-1295 & Ipamorelin peptide combination — mechanisms, key benefits (muscle, fat loss, recovery, anti-aging), protocols, and IGF-1 comparisons.</div>
-      <div class="card-foot"><span class="url-text">cjc1295-ipamorelin.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://simple-hash.vercel.app" target="_blank" rel="noopener"
-       data-name="simple hash generator tool cryptography algorithm" data-cat="tool">
-      <div class="card-num">07</div>
-      <div class="card-top">
-        <span class="card-label">Tool</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Simple Hash</div>
-      <div class="card-desc">Hash Generator using Poly-31: (h × 31 + v) % 9999991. Input text, get a 7-digit hash, toggle Encryption Mode to hide breakdowns, and explore the built-in Collision Finder.</div>
-      <div class="card-foot"><span class="url-text">simple-hash.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://meeqat-v1.vercel.app" target="_blank" rel="noopener"
-       data-name="meeqat prayer times islamic v1 city" data-cat="islamic">
-      <div class="card-num">08</div>
-      <div class="card-top">
-        <span class="card-label">Islamic</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Meeqat v1</div>
-      <div class="card-desc">Prayer times app with live clock. Search any city or country for accurate prayer schedules, with a toggle between 12-hour and 24-hour formats.</div>
-      <div class="card-foot"><span class="url-text">meeqat-v1.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://meeqat-v2.vercel.app" target="_blank" rel="noopener"
-       data-name="meeqat prayer times islamic v2 weather updated" data-cat="islamic">
-      <div class="card-num">09</div>
-      <div class="card-top">
-        <span class="card-label">Islamic</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Meeqat v2</div>
-      <div class="card-desc">Upgraded prayer times experience — cleaner interface, city search with prayer schedules and weather info, real-time clock, and 24-hour format toggle.</div>
-      <div class="card-foot"><span class="url-text">meeqat-v2.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://evo-2-hazel.vercel.app" target="_blank" rel="noopener"
-       data-name="evo 2 search AI genomics DNA biotech nature science" data-cat="health">
-      <div class="card-num">10</div>
-      <div class="card-top">
-        <span class="card-label">Biotech</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Evo 2 Search</div>
-      <div class="card-desc">Explore Evo 2 — a revolutionary AI model trained on DNA base pairs to understand, predict, and design genetic code. Published in Nature. Open source for medicine and biotech.</div>
-      <div class="card-foot"><span class="url-text">evo-2-hazel.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://enc-tools.vercel.app" target="_blank" rel="noopener"
-       data-name="cryptotoolkit encryption crypto hashing AES file tool" data-cat="tool">
-      <div class="card-num">11</div>
-      <div class="card-top">
-        <span class="card-label">Crypto</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">CRYPTOTOOLKIT</div>
-      <div class="card-desc">v6 Crypto Dashboard for text and file encryption. Text hashing, file hashing, AES utilities, and a hash analyzer — all-in-one cryptographic operations suite.</div>
-      <div class="card-foot"><span class="url-text">enc-tools.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://ramadan-dashapp.vercel.app" target="_blank" rel="noopener"
-       data-name="ramadan dashboard iftar quran tracker 5atma" data-cat="islamic">
-      <div class="card-num">12</div>
-      <div class="card-top">
-        <span class="card-label">Islamic</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">Ramadan Dashboard</div>
-      <div class="card-desc">Your personal Ramadan companion — track time until Iftar, manage daily religious goals, and monitor Quran reading progress with the 5atma Coach throughout the holy month.</div>
-      <div class="card-foot"><span class="url-text">ramadan-dashapp.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://dh-send.vercel.app" target="_blank" rel="noopener"
-       data-name="dh send discord webhook message sender username" data-cat="social">
-      <div class="card-num">13</div>
-      <div class="card-top">
-        <span class="card-label">Social</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">DH Send</div>
-      <div class="card-desc">Discord Webhook Sender — input a webhook URL, set a custom username, and broadcast messages directly to any Discord channel without opening the app.</div>
-      <div class="card-foot"><span class="url-text">dh-send.vercel.app</span></div>
-    </a>
-
-    <a class="card" href="https://g-whisper.vercel.app" target="_blank" rel="noopener"
-       data-name="g whisper terminal transmission chat anonymous voice" data-cat="social">
-      <div class="card-num">14</div>
-      <div class="card-top">
-        <span class="card-label">Social</span>
-        <span class="arrow-icon">↗</span>
-      </div>
-      <div class="card-name">G-Whisper</div>
-      <div class="card-desc">Terminal Transmission — a minimalist communication platform with raw terminal aesthetics. Set an alias (or stay Anonymous), hit CONNECT, and transmit. No noise, just signal.</div>
-      <div class="card-foot"><span class="url-text">g-whisper.vercel.app</span></div>
-    </a>
-
-    <div class="empty" id="empty">— no results —</div>
-
-  </div>
-
-  <!-- ── FOOTER ── -->
-  <footer>
-    <div class="foot-l">
-      built by <a href="https://github.com/izlitni" target="_blank" rel="noopener">izlitni</a>
-      &nbsp;·&nbsp; deployed on vercel
-    </div>
-    <div class="foot-r">© 2025 &nbsp;·&nbsp; 14 applications</div>
-  </footer>
-
+<div class="background"></div>
+<div class="noise"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastMsg"></span>
 </div>
 
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="#about" class="mobile-link">about</a>
+  <a href="#work" class="mobile-link">work</a>
+  <a href="#contact" class="mobile-link">contact</a>
+</div>
+
+<header id="header">
+  <div class="container inner">
+    <a class="logo" href="#">
+      <div class="logo-mark">i</div>
+      <span class="logo-text">izlitni</span>
+    </a>
+    <nav class="desktop">
+      <a href="#about">about</a>
+      <a href="#work">work</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-top">
+        <div class="hero-avatar"><span>i</span></div>
+        <div>
+          <div class="tagline">anonymous developer</div>
+          <div class="subtext">building from the shadows</div>
+        </div>
+      </div>
+      <h1 class="title">izlitni<span class="cursor"></span></h1>
+      <p class="subtext">Code is my identity. Output is my signature. I build clean, performant tools and platforms — then disappear.</p>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="about">
+    <div class="container">
+      <div class="section-label">About</div>
+      <p>Operating under the pseudonym "izlitni", I build applications that solve real problems — from fintech platforms to cryptographic toolkits, from prayer time apps to social experiments. No face, no brand, just consistently shipped work.</p>
+      <p>My focus spans full-stack development, security tooling, and minimalist interface design. I believe the best software doesn't need a face behind it — it just needs to work. Every project is a node in a larger network, each one self-contained but connected by the same philosophy.</p>
+      <div class="section-label" style="margin-top:48px">Stack</div>
+      <div class="skills">
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">Next.js</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Tailwind</span>
+        <span class="skill-tag">PostgreSQL</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">Cryptography</span>
+        <span class="skill-tag">WebSockets</span>
+        <span class="skill-tag">Vercel</span>
+        <span class="skill-tag">REST APIs</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work">
+    <div class="container">
+      <div class="section-label">Work</div>
+      <div class="work-grid" id="workGrid">
+
+        <div class="card" data-delay="0">
+          <div class="card-header">
+            <span class="card-num">01</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3>Bek Bank</h3>
+          <p>Secure digital banking platform with free accounts, instant transfers, real-time balance tracking, and enterprise-grade security. $0 monthly fees.</p>
+          <div class="card-tags"><span class="card-tag">fintech</span><span class="card-tag">full-stack</span></div>
+          <div class="card-meta">
+            <span class="stack">banking platform</span>
+            <a href="https://bekbank.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="80">
+          <div class="card-header">
+            <span class="card-num">02</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <h3>CRYPTOTOOLKIT</h3>
+          <p>Crypto dashboard v6 with text hashing, file hashing, AES utilities, hash analyzer, and encryption mode. Complete cryptographic workspace.</p>
+          <div class="card-tags"><span class="card-tag">crypto</span><span class="card-tag">security</span></div>
+          <div class="card-meta">
+            <span class="stack">encryption suite</span>
+            <a href="https://enc-tools.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="160">
+          <div class="card-header">
+            <span class="card-num">03</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          </div>
+          <h3>Simple Hash</h3>
+          <p>Hash generator using Poly-31 · Prime Mod · 7-Digit algorithm. Includes encryption mode to hide calculation breakdowns and a collision finder.</p>
+          <div class="card-tags"><span class="card-tag">crypto</span><span class="card-tag">algorithm</span></div>
+          <div class="card-meta">
+            <span class="stack">hash tool</span>
+            <a href="https://simple-hash.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="240">
+          <div class="card-header">
+            <span class="card-num">04</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          </div>
+          <h3>G-Whisper</h3>
+          <p>Terminal transmission app for anonymous messaging. Enter an alias, connect, and communicate through a terminal-like interface. No logs.</p>
+          <div class="card-tags"><span class="card-tag">realtime</span><span class="card-tag">websockets</span></div>
+          <div class="card-meta">
+            <span class="stack">anonymous chat</span>
+            <a href="https://g-whisper.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="320">
+          <div class="card-header">
+            <span class="card-num">05</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          </div>
+          <h3>Ramadan Dashboard</h3>
+          <p>Ramadan companion with iftar timer, daily goals tracker for religious practices, and a Quran reading progress coach.</p>
+          <div class="card-tags"><span class="card-tag">dashboard</span><span class="card-tag">utilities</span></div>
+          <div class="card-meta">
+            <span class="stack">lifestyle app</span>
+            <a href="https://ramadan-dashapp.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="400">
+          <div class="card-header">
+            <span class="card-num">06</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+          </div>
+          <h3>Meeqat v2</h3>
+          <p>Prayer time application with city search, weather info, clean interface, and 12/24h format toggle. Evolved from v1.</p>
+          <div class="card-tags"><span class="card-tag">api</span><span class="card-tag">interface</span></div>
+          <div class="card-meta">
+            <span class="stack">prayer times</span>
+            <a href="https://meeqat-v2.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="480">
+          <div class="card-header">
+            <span class="card-num">07</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          </div>
+          <h3>Fastrest</h3>
+          <p>Social pinboard for sharing images with categories — Juicy Burgers, Pizza Scampi, Dessert Porn, and more.</p>
+          <div class="card-tags"><span class="card-tag">social</span><span class="card-tag">media</span></div>
+          <div class="card-meta">
+            <span class="stack">pinboard</span>
+            <a href="https://fastrest.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="560">
+          <div class="card-header">
+            <span class="card-num">08</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          </div>
+          <h3>Peter Answer</h3>
+          <p>Virtual Oracle — ask anything. Features a petition trick input that lets you secretly type answers while appearing to type a petition.</p>
+          <div class="card-tags"><span class="card-tag">interactive</span><span class="card-tag">trick</span></div>
+          <div class="card-meta">
+            <span class="stack">social experiment</span>
+            <a href="https://peteranswer.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="640">
+          <div class="card-header">
+            <span class="card-num">09</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><line x1="22" y1="10" x2="10" y2="10"/><line x1="22" y1="14" x2="10" y2="14"/></svg></div>
+          </div>
+          <h3>DH Send</h3>
+          <p>Discord webhook sender — customize username, input webhook URL, type your message, and fire. Lightweight automation utility.</p>
+          <div class="card-tags"><span class="card-tag">discord</span><span class="card-tag">utility</span></div>
+          <div class="card-meta">
+            <span class="stack">webhook tool</span>
+            <a href="https://dh-send.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="720">
+          <div class="card-header">
+            <span class="card-num">10</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3>Evo 2</h3>
+          <p>Guide to the revolutionary AI model trained on DNA base pairs. Covers medicine, agriculture, and biotechnology applications.</p>
+          <div class="card-tags"><span class="card-tag">ai</span><span class="card-tag">research</span></div>
+          <div class="card-meta">
+            <span class="stack">genomic ai</span>
+            <a href="https://evo-2-hazel.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="800">
+          <div class="card-header">
+            <span class="card-num">11</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          </div>
+          <h3>Tarbija</h3>
+          <p>Name generator tool with Girl/Boy category selection. Input a name, press Go, and get a personalized result instantly.</p>
+          <div class="card-tags"><span class="card-tag">generator</span><span class="card-tag">tool</span></div>
+          <div class="card-meta">
+            <span class="stack">name tool</span>
+            <a href="https://tarbija.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="880">
+          <div class="card-header">
+            <span class="card-num">12</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+          </div>
+          <h3>CJC-1295 & Ipamorelin</h3>
+          <p>Comprehensive guide on the synergistic peptide combination — mechanisms, benefits, protocols, side effects, and IGF-1 comparison.</p>
+          <div class="card-tags"><span class="card-tag">reference</span><span class="card-tag">medical</span></div>
+          <div class="card-meta">
+            <span class="stack">research guide</span>
+            <a href="https://cjc1295-ipamorelin.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="960">
+          <div class="card-header">
+            <span class="card-num">13</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          </div>
+          <h3>Meeqat v1</h3>
+          <p>Original prayer time app with city search, current time display, and 12/24h toggle. The foundation that v2 was built upon.</p>
+          <div class="card-tags"><span class="card-tag">api</span><span class="card-tag">utility</span></div>
+          <div class="card-meta">
+            <span class="stack">prayer times</span>
+            <a href="https://meeqat-v1.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+        <div class="card" data-delay="1040">
+          <div class="card-header">
+            <span class="card-num">14</span>
+            <div class="card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          </div>
+          <h3>Best Experience</h3>
+          <p>Minimalist page with a single interactive element. The purpose reveals itself only through interaction. Sometimes less is more.</p>
+          <div class="card-tags"><span class="card-tag">experiment</span><span class="card-tag">minimal</span></div>
+          <div class="card-meta">
+            <span class="stack">interactive</span>
+            <a href="https://best-experience.vercel.app" target="_blank" rel="noopener" class="card-link">visit <svg viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>
+          </div>
+        </div>
+
+      </div>
+
+      <a href="https://github.com/izlitni" target="_blank" rel="noopener" class="more-link">
+        view all on github
+        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section id="principles">
+    <div class="container">
+      <div class="section-label">Principles</div>
+      <ul class="principles">
+        <li><span>Build silently. Ship loudly. Remain unknown.</span></li>
+        <li><span>Minimal design. Maximum function. Zero bloat.</span></li>
+        <li><span>Code speaks louder than bios. Output over identity.</span></li>
+        <li><span>Every tool should earn its place in the stack.</span></li>
+        <li><span>If it works, don't explain it. If it doesn't, don't ship it.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-label">Contact</div>
+      <p style="color:var(--text-2);max-width:520px;margin-bottom:24px;font-size:15px">Reach out through encrypted channels. Hover to decode. All connections are logged, none are traced.</p>
+      <div class="contact-block">
+        <div class="contact-row">
+          <span class="contact-k">github</span>
+          <span class="contact-v"><a href="https://github.com/izlitni" target="_blank" rel="noopener">github.com/izlitni</a></span>
+          <button class="copy-btn" data-copy="https://github.com/izlitni">copy</button>
+        </div>
+        <div class="contact-row">
+          <span class="contact-k">email</span>
+          <span class="contact-v cipher" id="emailField" data-real="izlitni@virgilian.com"></span>
+          <button class="copy-btn" data-copy="izlitni@virgilian.com" id="emailCopy">copy</button>
+        </div>
+        <div class="contact-row">
+          <span class="contact-k">twitter</span>
+          <span class="contact-v cipher" id="twitterField" data-real="@IbrahimZlitni"></span>
+          <button class="copy-btn" data-copy="@IbrahimZlitni" id="twitterCopy">copy</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <span>© 2025 izlitni</span>
+    <div class="footer-dot"></div>
+    <span>all rights reserved</span>
+  </div>
+</footer>
+
 <script>
-  const input  = document.getElementById('search');
-  const cards  = document.querySelectorAll('.card[data-name]');
-  const empty  = document.getElementById('empty');
-  let filter   = 'all';
+// === Cursor Glow with Lerp (Smooth Liquid Follow) ===
+const glow = document.getElementById('cursorGlow');
+let mx = 0, my = 0, cx = 0, cy = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateGlow() {
+  cx += (mx - cx) * 0.12;
+  cy += (my - cy) * 0.12;
+  glow.style.transform = `translate(${cx - 140}px, ${cy - 140}px)`;
+  requestAnimationFrame(animateGlow);
+}
+animateGlow();
 
-  function update() {
-    const q = input.value.toLowerCase().trim();
-    let n = 0;
-    cards.forEach(c => {
-      const ok = c.dataset.name.includes(q) &&
-                 (filter === 'all' || c.dataset.cat === filter);
-      c.classList.toggle('hidden', !ok);
-      if (ok) n++;
-    });
-    empty.style.display = n === 0 ? 'block' : 'none';
-  }
+// === Header Scroll State ===
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
 
-  input.addEventListener('input', update);
+// === Section Reveal ===
+const sections = document.querySelectorAll('section');
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.06 });
+sections.forEach(s => sectionObserver.observe(s));
 
-  document.querySelectorAll('.fb').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('.fb').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      filter = b.dataset.filter;
-      update();
-    });
+// === Staggered Card Reveal ===
+const cards = document.querySelectorAll('.card');
+const cardObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const delay = parseInt(e.target.dataset.delay) || 0;
+      setTimeout(() => e.target.classList.add('in'), delay);
+      cardObserver.unobserve(e.target);
+    }
   });
+}, { threshold: 0.04, rootMargin: '0px 0px -40px 0px' });
+cards.forEach(c => cardObserver.observe(c));
+
+// === Card Spotlight ===
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+  });
+});
+
+// === Cipher (ROT13 + Hover Decode) ===
+function rot13(str) {
+  return str.replace(/[a-zA-Z]/g, c => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - base + 13) % 26 + base);
+  });
+}
+
+const emailField = document.getElementById('emailField');
+const twitterField = document.getElementById('twitterField');
+emailField.textContent = rot13(emailField.dataset.real);
+twitterField.textContent = rot13(twitterField.dataset.real);
+
+// Hover to decode (visually)
+[emailField, twitterField].forEach(field => {
+  field.addEventListener('mouseenter', () => {
+    field.textContent = field.dataset.real;
+    field.classList.add('decoded');
+  });
+  field.addEventListener('mouseleave', () => {
+    field.textContent = rot13(field.dataset.real);
+    field.classList.remove('decoded');
+  });
+});
+
+// === Toast ===
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
+let toastTimer;
+function showToast(msg) {
+  toastMsg.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// === Copy Buttons ===
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.dataset.copy;
+    navigator.clipboard.writeText(val).then(() => {
+      showToast('copied to clipboard');
+      btn.textContent = 'done';
+      setTimeout(() => btn.textContent = 'copy', 1500);
+    }).catch(() => showToast('copy failed'));
+  });
+});
+
+// === Mobile Menu ===
+const menuToggle = document.getElementById('menuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileClose = document.getElementById('mobileClose');
+const mobileLinks = document.querySelectorAll('.mobile-link');
+
+menuToggle.addEventListener('click', () => mobileMenu.classList.add('open'));
+mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+mobileLinks.forEach(l => l.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+// === Smooth Scroll Offset (for sticky header) ===
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(anchor.getAttribute('href'));
+    if (target) {
+      const offset = 80;
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
 </script>
 </body>
 </html>
