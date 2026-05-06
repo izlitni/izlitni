@@ -43,8 +43,8 @@ body{
 .cursor-glow{
   position:fixed;top:0;left:0;width:280px;height:280px;border-radius:50%;
   pointer-events:none;z-index:-1;
-  background:radial-gradient(circle,rgba(139,92,246,0.14) 0%,rgba(34,211,238,0.08) 35%,transparent 70%);
-  filter:blur(42px);opacity:0;transition:opacity .4s;will-change:transform;
+  background:radial-gradient(circle,rgba(139,92,246,0.14) 0%,rgba(34,211,238,0.08) 35%,transparent 80%);
+  filter:blur(70px);opacity:0;transition:opacity .4s;will-change:transform;
 }
 @media(pointer:fine){.cursor-glow{opacity:.85}}
 .container{max-width:880px;margin:0 auto;padding:0 24px}
@@ -56,27 +56,13 @@ header{
   border-bottom:1px solid transparent;transition:all .3s ease;
 }
 header .inner{
-  height:88px;display:flex;align-items:center;justify-content:space-between;transition:height .3s ease;
+  height:88px;display:flex;align-items:center;justify-content:center;transition:height .3s ease;
 }
 header.scrolled{
   background:rgba(0,0,0,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-color:var(--border);
 }
 header.scrolled .inner{height:64px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--muted)}
-.logo-mark{
-  width:28px;height:28px;border-radius:50%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02));
-  border:1px solid var(--card-border);display:grid;place-items:center;
-  font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);
-  backdrop-filter:blur(8px);transition:all .3s;
-}
-header.scrolled .logo-mark{
-  background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02));
-  border-color:rgba(139,92,246,0.2);color:var(--accent-1);
-}
-.logo-text{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.02em;color:var(--muted);transition:color .3s}
-header.scrolled .logo-text{color:var(--text-2)}
 nav{display:flex;gap:28px;align-items:center}
 nav a{
   color:var(--muted);text-decoration:none;font-size:13px;
@@ -345,10 +331,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
 
 <header id="header">
   <div class="container inner">
-    <a class="logo" href="#">
-      <div class="logo-mark">i</div>
-      <span class="logo-text">izlitni</span>
-    </a>
     <nav class="desktop">
       <a href="#about">about</a>
       <a href="#work">work</a>
@@ -409,7 +391,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="0">
           <div class="card-header">
             <span class="card-num">01</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
           </div>
           <h3>Bek Bank</h3>
           <p>Secure digital banking platform with free accounts, instant transfers, real-time balance tracking, and enterprise-grade security. $0 monthly fees.</p>
@@ -423,9 +404,8 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="80">
           <div class="card-header">
             <span class="card-num">02</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
           </div>
-          <h3>CRYPTOTOOLKIT</h3>
+          <h3>Crypto-Toolkit</h3>
           <p>Crypto dashboard v6 with text hashing, file hashing, AES utilities, hash analyzer, and encryption mode. Complete cryptographic workspace.</p>
           <div class="card-tags"><span class="card-tag">crypto</span><span class="card-tag">security</span></div>
           <div class="card-meta">
@@ -437,7 +417,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="160">
           <div class="card-header">
             <span class="card-num">03</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
           </div>
           <h3>Simple Hash</h3>
           <p>Hash generator using Poly-31 · Prime Mod · 7-Digit algorithm. Includes encryption mode to hide calculation breakdowns and a collision finder.</p>
@@ -451,7 +430,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="240">
           <div class="card-header">
             <span class="card-num">04</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
           </div>
           <h3>G-Whisper</h3>
           <p>Terminal transmission app for anonymous messaging. Enter an alias, connect, and communicate through a terminal-like interface. No logs.</p>
@@ -465,7 +443,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="320">
           <div class="card-header">
             <span class="card-num">05</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           </div>
           <h3>Ramadan Dashboard</h3>
           <p>Ramadan companion with iftar timer, daily goals tracker for religious practices, and a Quran reading progress coach.</p>
@@ -479,7 +456,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="400">
           <div class="card-header">
             <span class="card-num">06</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
           </div>
           <h3>Meeqat v2</h3>
           <p>Prayer time application with city search, weather info, clean interface, and 12/24h format toggle. Evolved from v1.</p>
@@ -493,7 +469,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="480">
           <div class="card-header">
             <span class="card-num">07</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
           </div>
           <h3>Fastrest</h3>
           <p>Social pinboard for sharing images with categories — Juicy Burgers, Pizza Scampi, Dessert Porn, and more.</p>
@@ -507,7 +482,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="560">
           <div class="card-header">
             <span class="card-num">08</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
           </div>
           <h3>Peter Answer</h3>
           <p>Virtual Oracle — ask anything. Features a petition trick input that lets you secretly type answers while appearing to type a petition.</p>
@@ -521,7 +495,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="640">
           <div class="card-header">
             <span class="card-num">09</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><line x1="22" y1="10" x2="10" y2="10"/><line x1="22" y1="14" x2="10" y2="14"/></svg></div>
           </div>
           <h3>DH Send</h3>
           <p>Discord webhook sender — customize username, input webhook URL, type your message, and fire. Lightweight automation utility.</p>
@@ -535,7 +508,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="720">
           <div class="card-header">
             <span class="card-num">10</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
           </div>
           <h3>Evo 2</h3>
           <p>Guide to the revolutionary AI model trained on DNA base pairs. Covers medicine, agriculture, and biotechnology applications.</p>
@@ -549,7 +521,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="800">
           <div class="card-header">
             <span class="card-num">11</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           </div>
           <h3>Tarbija</h3>
           <p>Name generator tool with Girl/Boy category selection. Input a name, press Go, and get a personalized result instantly.</p>
@@ -563,7 +534,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="880">
           <div class="card-header">
             <span class="card-num">12</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
           </div>
           <h3>CJC-1295 & Ipamorelin</h3>
           <p>Comprehensive guide on the synergistic peptide combination — mechanisms, benefits, protocols, side effects, and IGF-1 comparison.</p>
@@ -577,7 +547,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="960">
           <div class="card-header">
             <span class="card-num">13</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
           </div>
           <h3>Meeqat v1</h3>
           <p>Original prayer time app with city search, current time display, and 12/24h toggle. The foundation that v2 was built upon.</p>
@@ -591,7 +560,6 @@ footer{border-top:1px solid var(--border);padding:36px 0 80px;color:var(--muted)
         <div class="card" data-delay="1040">
           <div class="card-header">
             <span class="card-num">14</span>
-            <div class="card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
           </div>
           <h3>Best Experience</h3>
           <p>Minimalist page with a single interactive element. The purpose reveals itself only through interaction. Sometimes less is more.</p>
@@ -685,6 +653,58 @@ const sectionObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.06 });
 sections.forEach(s => sectionObserver.observe(s));
 
+// === Matrix-Style Text Scramble Decoder ===
+class TextScramble {
+  constructor(el) {
+    this.el = el;
+    this.chars = '!<>-_\\/[]{}—=+*^?#_01';
+    this.update = this.update.bind(this);
+  }
+  setText(newText) {
+    const oldText = this.el.innerText;
+    const length = Math.max(oldText.length, newText.length);
+    const promise = new Promise((resolve) => this.resolve = resolve);
+    this.queue = [];
+    for (let i = 0; i < length; i++) {
+      const from = oldText[i] || '';
+      const to = newText[i] || '';
+      const start = Math.floor(Math.random() * 15);
+      const end = start + Math.floor(Math.random() * 15);
+      this.queue.push({ from, to, start, end });
+    }
+    cancelAnimationFrame(this.frameRequest);
+    this.frame = 0;
+    this.update();
+    return promise;
+  }
+  update() {
+    let output = '';
+    let complete = 0;
+    for (let i = 0, n = this.queue.length; i < n; i++) {
+      let { from, to, start, end, char } = this.queue[i];
+      if (this.frame >= end) {
+        complete++;
+        output += to;
+      } else if (this.frame >= start) {
+        if (!char || Math.random() < 0.28) {
+          char = this.chars[Math.floor(Math.random() * this.chars.length)];
+          this.queue[i].char = char;
+        }
+        output += `<span style="color:var(--accent-2);opacity:0.7">${char}</span>`;
+      } else {
+        output += from;
+      }
+    }
+    this.el.innerHTML = output;
+    if (complete === this.queue.length) {
+      this.resolve();
+    } else {
+      this.frameRequest = requestAnimationFrame(this.update);
+      this.frame++;
+    }
+  }
+}
+
 // === Staggered Card Reveal ===
 const cards = document.querySelectorAll('.card');
 const cardObserver = new IntersectionObserver(entries => {
@@ -697,6 +717,32 @@ const cardObserver = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.04, rootMargin: '0px 0px -40px 0px' });
 cards.forEach(c => cardObserver.observe(c));
+
+// === 3D Card Tilt Effect ===
+if (window.matchMedia('(pointer: fine)').matches) {
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -8; // Max 8deg rotation
+      const rotateY = ((x - centerX) / centerX) * 8;
+      
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+      card.style.transition = 'transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.3s, box-shadow 0.3s';
+    });
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'transform 0.1s ease-out, border-color 0.3s, box-shadow 0.3s';
+    });
+  });
+}
 
 // === Card Spotlight ===
 document.querySelectorAll('.card').forEach(card => {
@@ -717,18 +763,22 @@ function rot13(str) {
 
 const emailField = document.getElementById('emailField');
 const twitterField = document.getElementById('twitterField');
-emailField.textContent = rot13(emailField.dataset.real);
-twitterField.textContent = rot13(twitterField.dataset.real);
+const emailFx = new TextScramble(emailField);
+const twitterFx = new TextScramble(twitterField);
 
-// Hover to decode (visually)
-[emailField, twitterField].forEach(field => {
+// Initial state
+emailField.innerText = rot13(emailField.dataset.real);
+twitterField.innerText = rot13(twitterField.dataset.real);
+
+// Hover to decode
+[emailField, twitterField].forEach((field, i) => {
+  const fx = i === 0 ? emailFx : twitterFx;
   field.addEventListener('mouseenter', () => {
-    field.textContent = field.dataset.real;
-    field.classList.add('decoded');
+    fx.setText(field.dataset.real).then(() => field.classList.add('decoded'));
   });
   field.addEventListener('mouseleave', () => {
-    field.textContent = rot13(field.dataset.real);
     field.classList.remove('decoded');
+    fx.setText(rot13(field.dataset.real));
   });
 });
 
